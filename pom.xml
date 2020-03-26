@@ -39,19 +39,19 @@
 			</exclusions>
 		</dependency>
 
-		<!-- Banco de Dados H2 
+		<!-- Banco de Dados H2 -->
 		<dependency> 
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId> 
 			<scope>runtime</scope> 
-		</dependency> -->
+		</dependency> 
 
-		<!-- Spring Boot Starter Data JPA 
+		<!-- Spring Boot Starter Data JPA -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId> 
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
 			<scope>compile</scope> 
-		</dependency> -->
+		</dependency> 
 
 		<!-- Spring Boot DevTools -->
 		<dependency>
