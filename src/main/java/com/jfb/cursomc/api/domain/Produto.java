@@ -9,10 +9,14 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
-public class Categoria implements Serializable {
+public class Produto implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -20,16 +24,21 @@ public class Categoria implements Serializable {
     private Integer id;
 
     private String nome;
+    private Double preco;
 
-    @ManyToMany(mappedBy = "categorias")
-    private List<Produto> produtos = new ArrayList<>();
+    @JsonIgnore
+    @ManyToMany
+    @JoinTable(name = "PRODUTO_CATEGORIA", joinColumns = @JoinColumn(name = "produto_id"),
+                inverseJoinColumns = @JoinColumn(name = "categoria_id"))
+    private List<Categoria> categorias = new ArrayList<>();
 
-    public Categoria() {
+    public Produto() {
     }
 
-    public Categoria(Integer id, String nome) {
+    public Produto(Integer id, String nome, Double preco) {
         this.id = id;
         this.nome = nome;
+        this.preco = preco;
     }
 
     public Integer getId() {
@@ -48,23 +57,31 @@ public class Categoria implements Serializable {
         this.nome = nome;
     }
 
-    public List<Produto> getProdutos() {
-        return this.produtos;
+    public Double getPreco() {
+        return this.preco;
     }
 
-    public void setProdutos(List<Produto> produtos) {
-        this.produtos = produtos;
+    public void setPreco(Double preco) {
+        this.preco = preco;
+    }
+
+    public List<Categoria> getCategorias() {
+        return this.categorias;
+    }
+
+    public void setCategorias(List<Categoria> categorias) {
+        this.categorias = categorias;
     }
 
     @Override
     public boolean equals(Object o) {
         if (o == this)
             return true;
-        if (!(o instanceof Categoria)) {
+        if (!(o instanceof Produto)) {
             return false;
         }
-        Categoria categoria = (Categoria) o;
-        return Objects.equals(id, categoria.id);
+        Produto produto = (Produto) o;
+        return Objects.equals(id, produto.id);
     }
 
     @Override
