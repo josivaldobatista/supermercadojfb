@@ -14,7 +14,7 @@ import javax.persistence.OneToOne;
 import com.jfb.cursomc.api.domain.enums.EstadoPagamento;
 
 @Entity
-@Inheritance(strategy = InheritanceType.JOINED)
+@Inheritance(strategy = InheritanceType.JOINED) // Escolhendo se eu quero tabela única ou tabelas separadas para as heranças.
 public abstract class Pagamento implements Serializable {
     private static final long serialVersionUID = 1L;
 
