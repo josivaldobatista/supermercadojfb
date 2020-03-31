@@ -1,5 +1,6 @@
 package com.jfb.cursomc.api.services;
 
+import java.util.List;
 import java.util.Optional;
 
 import com.jfb.cursomc.api.domain.Categoria;
@@ -41,5 +42,9 @@ public class CategoriaService {
             throw new DataIntegrityException(
                 "Não é possivel excluir uma categoria que possui produtos.");
         }
+    }
+
+    public List<Categoria> findAll () {
+        return repo.findAll();
     }
 }
