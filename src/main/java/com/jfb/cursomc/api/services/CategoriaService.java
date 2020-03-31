@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.jfb.cursomc.api.domain.Categoria;
+import com.jfb.cursomc.api.dto.CategoriaDTO;
 import com.jfb.cursomc.api.repositories.CategoriaRepository;
 import com.jfb.cursomc.api.services.exceptions.DataIntegrityException;
 import com.jfb.cursomc.api.services.exceptions.ObjectNotFoundException;
@@ -54,5 +55,10 @@ public class CategoriaService {
     public Page<Categoria> findPage(Integer page, Integer linesPerPage, String orderBy, String direction) {
         PageRequest pageRequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
         return repo.findAll(pageRequest);
+    }
+
+    // Metódo para instanciar uma Categoria a parti de um DTO.
+    public Categoria fromDTO(CategoriaDTO objDto) {
+        return new Categoria(objDto.getId(), objDto.getNome());
     }
 }
