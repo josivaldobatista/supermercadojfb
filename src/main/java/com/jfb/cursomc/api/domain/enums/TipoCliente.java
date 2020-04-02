@@ -2,19 +2,18 @@ package com.jfb.cursomc.api.domain.enums;
 
 public enum TipoCliente {
 
-    PESSOA_FISICA(1, "Pessoa Física"), 
-    PESSOA_JURIDICA(2, "Pessoa Jurídica");
+    PESSOA_FISICA(1, "Pessoa Física"), PESSOA_JURIDICA(2, "Pessoa Jurídica");
 
-    private int cod;
+    private int codigo;
     private String descricao;
 
-    private TipoCliente(int cod, String descricao) {
-        this.cod = cod;
+    private TipoCliente(int codigo, String descricao) {
+        this.codigo = codigo;
         this.descricao = descricao;
     }
 
     public int getCod() {
-        return cod;
+        return codigo;
     }
 
     public String getDescricao() {
@@ -22,17 +21,17 @@ public enum TipoCliente {
     }
 
     public static TipoCliente toEnum(Integer cod) {
-
         if (cod == null) {
             return null;
         }
 
         for (TipoCliente x : TipoCliente.values()) {
-            if (cod.equals(x.getCod())) {
+            if (cod == x.getCod()) {
                 return x;
             }
         }
 
-        throw new IllegalArgumentException("ID inválido: " + cod);
+        throw new IllegalArgumentException("Id inválido: " + cod);
     }
+
 }
