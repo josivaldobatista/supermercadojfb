@@ -57,11 +57,19 @@ public class ClienteService {
 		return repo.findAll(pageRequest);
 	}
 
-	// Metódo para instanciar uma Cliente a parti de um DTO.
+	// Metódo para instanciar uma Cliente a parti de um DTO(não de um banco de dados).
 	public Cliente fromDTO(ClienteDTO objDto) {
 		return new Cliente(objDto.getId(), objDto.getNome(), objDto.getEmail(), null, null);
 	}
 
+	/**
+	 * 
+	 * Método para instanciar o objeto do banco de dados e
+	 * atualizar com os novos dados que veram da requisição.
+	 * 
+	 * @param newObj = que veio do banco de dados.
+	 * @param obj = que veio da requisição.
+	 */
 	private void updateData(Cliente newObj, Cliente obj) {
 		newObj.setNome(obj.getNome());
 		newObj.setEmail(obj.getEmail());
