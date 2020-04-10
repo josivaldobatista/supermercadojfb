@@ -23,29 +23,29 @@ public class CategoriaService {
     @Autowired
     private CategoriaRepository repo;
 
-    public Categoria find(final Integer id) {
-        final Optional<Categoria> obj = repo.findById(id);
+    public Categoria find(Integer id) {
+        Optional<Categoria> obj = repo.findById(id);
         return obj.orElseThrow(() -> new ObjectNotFoundException(
                 "Objecto não encontrado! ID: " + id + ", Tipo: " + Categoria.class.getName()));
     }
 
     @Transactional
-    public Categoria insert(final Categoria obj) {
+    public Categoria insert(Categoria obj) {
         obj.setId(null);
         return repo.save(obj);
     }
 
-    public Categoria update(final Categoria obj) {
-		final Categoria newObj = find(obj.getId()); // Aqui estou verificando se o objeto existe.
+    public Categoria update(Categoria obj) {
+		Categoria newObj = find(obj.getId()); // Aqui estou verificando se o objeto existe.
 		updateData(newObj, obj);
 		return repo.save(newObj);
 	}
 
-    public void delete(final Integer id) {
+    public void delete(Integer id) {
         find(id);
         try {
             repo.deleteById(id);
-        } catch (final DataIntegrityViolationException e) {
+        } catch (DataIntegrityViolationException e) {
             throw new DataIntegrityException(
                 "Não é possivel excluir uma categoria que possui produtos.");
         }
@@ -55,13 +55,13 @@ public class CategoriaService {
         return repo.findAll();
     }
 
-    public Page<Categoria> findPage(final Integer page, final Integer linesPerPage, final String orderBy, final String direction) {
-        final PageRequest pageRequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
+    public Page<Categoria> findPage(Integer page, Integer linesPerPage, String orderBy, String direction) {
+        PageRequest pageRequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
         return repo.findAll(pageRequest);
     }
 
     // Metódo para instanciar uma Categoria a parti de um DTO.
-    public Categoria fromDTO(final CategoriaDTO objDto) {
+    public Categoria fromDTO(CategoriaDTO objDto) {
         return new Categoria(objDto.getId(), objDto.getNome());
     }
 
