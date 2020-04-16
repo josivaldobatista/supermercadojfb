@@ -3,6 +3,8 @@ package com.jfb.cursomc.api.config;
 import java.text.ParseException;
 
 import com.jfb.cursomc.api.services.DBService;
+import com.jfb.cursomc.api.services.EmailService;
+import com.jfb.cursomc.api.services.MockMailService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -20,6 +22,11 @@ public class TestConfig {
     public boolean instantiateDataBase() throws ParseException {
         dbService.instantiateTestDataBase();
         return true;
+    }
+
+    @Bean
+    public EmailService emailService() {
+        return new MockMailService();
     }
 
 }
