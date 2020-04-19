@@ -1,5 +1,7 @@
 package com.jfb.cursomc.api.services;
 
+import javax.mail.internet.MimeMessage;
+
 import com.jfb.cursomc.api.services.AbstractEmailService;
 
 import org.slf4j.Logger;
@@ -13,6 +15,13 @@ public class MockMailService extends AbstractEmailService {
     @Override
     public void sendeEmail(SimpleMailMessage msg) {
         LOG.info("Simulando envio de email...");
+        LOG.info(msg.toString());
+        LOG.info("Email enviado!");
+    }
+
+    @Override
+    public void sendHtmlEmail(MimeMessage msg) {
+        LOG.info("Simulando envio de email HTML...");
         LOG.info(msg.toString());
         LOG.info("Email enviado!");
     }
