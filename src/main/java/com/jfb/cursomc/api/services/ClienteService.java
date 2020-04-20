@@ -8,6 +8,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,6 +25,9 @@ import com.jfb.cursomc.api.services.exceptions.ObjectNotFoundException;
 
 @Service
 public class ClienteService {
+
+	@Autowired
+	private BCryptPasswordEncoder pe;
 
 	@Autowired
 	private ClienteRepository repo;
@@ -73,15 +77,18 @@ public class ClienteService {
 	// Metódo para instanciar uma Cliente a parti de um DTO(não de um banco de
 	// dados).
 	public Cliente fromDTO(final ClienteDTO objDto) {
-		return new Cliente(objDto.getId(), objDto.getNome(), objDto.getEmail(), null, null);
+		return new Cliente(objDto.getId(), objDto.getNome(), objDto.getEmail(), null, null, null);
 	}
 
 	public Cliente fromDTO(final ClienteNewDTO objDto) {
 		Cliente cli = new Cliente(null, objDto.getNome(), objDto.getEmail(), objDto.getCpfOuCnpj(),
-				TipoCliente.toEnum(objDto.getTipo()));
+				TipoCliente.toEnum(objDto.getTipo()), pe.encode(objDto.getSenha()));
+
 		Cidade cid = new Cidade(objDto.getCidadeId(), null, null);
+
 		Endereco end = new Endereco(null, objDto.getLogradouro(), objDto.getNumero(), objDto.getComplemento(),
 				objDto.getBairro(), objDto.getCep(), cli, cid);
+				
 		cli.getEnderecos().add(end);
 		cli.getTelefones().add(objDto.getTelefone1());
 
