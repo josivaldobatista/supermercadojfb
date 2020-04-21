@@ -2,6 +2,7 @@ package com.jfb.cursomc.api.resources.exceptions;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.jfb.cursomc.api.services.exceptions.AuthorizationException;
 import com.jfb.cursomc.api.services.exceptions.DataIntegrityException;
 import com.jfb.cursomc.api.services.exceptions.ObjectNotFoundException;
 
@@ -34,5 +35,11 @@ public class ResourceExceptionHandler {
                 err.addError(x.getField(), x.getDefaultMessage());
             }
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err);
+    }
+
+    @ExceptionHandler(AuthorizationException.class)
+    public ResponseEntity<StandardError> authorization(final AuthorizationException e, final HttpServletRequest request) {
+        final StandardError err = new StandardError(HttpStatus.FORBIDDEN.value(), e.getMessage(), System.currentTimeMillis());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(err);
     }
 }
