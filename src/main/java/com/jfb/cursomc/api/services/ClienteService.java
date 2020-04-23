@@ -15,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.jfb.cursomc.api.domain.Cidade;
 import com.jfb.cursomc.api.domain.Cliente;
 import com.jfb.cursomc.api.domain.Endereco;
-import com.jfb.cursomc.api.domain.Pedido;
 import com.jfb.cursomc.api.domain.enums.Perfil;
 import com.jfb.cursomc.api.domain.enums.TipoCliente;
 import com.jfb.cursomc.api.dto.ClienteDTO;
@@ -38,9 +37,6 @@ public class ClienteService {
 
 	@Autowired
 	private EnderecoRepository enderecoRepository;
-
-	@Autowired
-	private ClienteService clienteService;
 
 	public Cliente find(final Integer id) {
 		UserSS user = UserService.authenticated();
