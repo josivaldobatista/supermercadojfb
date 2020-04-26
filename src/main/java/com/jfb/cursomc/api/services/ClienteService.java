@@ -1,5 +1,6 @@
 package com.jfb.cursomc.api.services;
 
+import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
@@ -11,6 +12,7 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.jfb.cursomc.api.domain.Cidade;
 import com.jfb.cursomc.api.domain.Cliente;
@@ -38,10 +40,13 @@ public class ClienteService {
 	@Autowired
 	private EnderecoRepository enderecoRepository;
 
+	@Autowired
+	private S3Service s3Service;
+
 	public Cliente find(final Integer id) {
 		UserSS user = UserService.authenticated();
-		
-		if(user == null || !user.hasRole(Perfil.ADMIN) && !id.equals(user.getId())) {
+
+		if (user == null || !user.hasRole(Perfil.ADMIN) && !id.equals(user.getId())) {
 			throw new AuthorizationException("Acesso negado!");
 		}
 
@@ -97,7 +102,7 @@ public class ClienteService {
 
 		Endereco end = new Endereco(null, objDto.getLogradouro(), objDto.getNumero(), objDto.getComplemento(),
 				objDto.getBairro(), objDto.getCep(), cli, cid);
-				
+
 		cli.getEnderecos().add(end);
 		cli.getTelefones().add(objDto.getTelefone1());
 
@@ -121,6 +126,10 @@ public class ClienteService {
 	private void updateData(final Cliente newObj, final Cliente obj) {
 		newObj.setNome(obj.getNome());
 		newObj.setEmail(obj.getEmail());
+	}
+
+	public URI uploadProfilePicture(MultipartFile multipartFile) {
+		return s3Service.uploadFile(multipartFile);
 	}
 
 }
