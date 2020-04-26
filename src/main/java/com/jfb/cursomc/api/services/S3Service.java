@@ -7,6 +7,7 @@ import java.net.URISyntaxException;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.jfb.cursomc.api.services.exceptions.FileException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,7 +34,7 @@ public class S3Service {
             String contentType = multipartFile.getContentType();
             return uploadFile(is, fileName, contentType);
         } catch (IOException e) {
-            throw new RuntimeException("Erro de IO: " + e.getMessage());
+            throw new FileException("Erro de IO: " + e.getMessage());
         }
     }
 
@@ -47,7 +48,7 @@ public class S3Service {
             LOG.info("Upload finalizado!");
             return s3Client.getUrl(bucketName, fileName).toURI();
         } catch (URISyntaxException e) {
-            throw new RuntimeException("Erro ao converte URL em URI");
+            throw new FileException("Erro ao converte URL em URI");
         }
     }
 }
