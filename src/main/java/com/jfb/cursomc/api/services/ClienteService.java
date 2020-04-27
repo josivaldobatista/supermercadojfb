@@ -43,14 +43,13 @@ public class ClienteService {
 	@Autowired
 	private S3Service s3Service;
 
-	public Cliente find(final Integer id) {
+	public Cliente find(Integer id) {
 		UserSS user = UserService.authenticated();
 
 		if (user == null || !user.hasRole(Perfil.ADMIN) && !id.equals(user.getId())) {
 			throw new AuthorizationException("Acesso negado!");
 		}
-
-		final Optional<Cliente> obj = repo.findById(id);
+		Optional<Cliente> obj = repo.findById(id);
 		return obj.orElseThrow(() -> new ObjectNotFoundException(
 				"Objecto não encontrado! ID: " + id + ", Tipo: " + Cliente.class.getName()));
 	}
@@ -63,17 +62,17 @@ public class ClienteService {
 		return obj;
 	}
 
-	public Cliente update(final Cliente obj) {
-		final Cliente newObj = find(obj.getId()); // Aqui estou verificando se o objeto existe.
+	public Cliente update(Cliente obj) {
+		Cliente newObj = find(obj.getId()); // Aqui estou verificando se o objeto existe.
 		updateData(newObj, obj);
 		return repo.save(newObj);
 	}
 
-	public void delete(final Integer id) {
+	public void delete(Integer id) {
 		find(id);
 		try {
 			repo.deleteById(id);
-		} catch (final DataIntegrityViolationException e) {
+		} catch (DataIntegrityViolationException e) {
 			throw new DataIntegrityException("Não é possivel excluir porque há pedidos relacionadas.");
 		}
 	}
@@ -82,19 +81,19 @@ public class ClienteService {
 		return repo.findAll();
 	}
 
-	public Page<Cliente> findPage(final Integer page, final Integer linesPerPage, final String orderBy,
-			final String direction) {
-		final PageRequest pageRequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
+	public Page<Cliente> findPage(Integer page, Integer linesPerPage, String orderBy,
+			String direction) {
+		PageRequest pageRequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
 		return repo.findAll(pageRequest);
 	}
 
 	// Metódo para instanciar uma Cliente a parti de um DTO(não de um banco de
 	// dados).
-	public Cliente fromDTO(final ClienteDTO objDto) {
+	public Cliente fromDTO(ClienteDTO objDto) {
 		return new Cliente(objDto.getId(), objDto.getNome(), objDto.getEmail(), null, null, null);
 	}
 
-	public Cliente fromDTO(final ClienteNewDTO objDto) {
+	public Cliente fromDTO(ClienteNewDTO objDto) {
 		Cliente cli = new Cliente(null, objDto.getNome(), objDto.getEmail(), objDto.getCpfOuCnpj(),
 				TipoCliente.toEnum(objDto.getTipo()), pe.encode(objDto.getSenha()));
 
@@ -123,13 +122,21 @@ public class ClienteService {
 	 * @param newObj = que veio do banco de dados.
 	 * @param obj    = que veio da requisição.
 	 */
-	private void updateData(final Cliente newObj, final Cliente obj) {
+	private void updateData(Cliente newObj, Cliente obj) {
 		newObj.setNome(obj.getNome());
 		newObj.setEmail(obj.getEmail());
 	}
 
 	public URI uploadProfilePicture(MultipartFile multipartFile) {
-		return s3Service.uploadFile(multipartFile);
+		UserSS user = UserService.authenticated();
+		if(user == null) {
+			throw new AuthorizationException("Acesso negado!");
+		}
+		URI uri =  s3Service.uploadFile(multipartFile);
+		Optional<Cliente> cli = repo.findById(user.getId());
+		cli.orElse(null).setImageUrl(uri.toString());
+		repo.save(cli.orElse(null));
+		return uri;
 	}
 
 }
